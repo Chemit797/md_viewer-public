@@ -1,0 +1,59 @@
+proxies:
+- name: Chicago-Hysteria2 (UDP)
+  type: hysteria2
+  server: direct.heisenbergrv.com
+  port: 443
+  password: 83d628ca639cd0c6f39f5970f5eb65e2
+  sni: direct.heisenbergrv.com
+  skip-cert-verify: false
+  up: 100 Mbps
+  down: 100 Mbps
+- name: Chicago-TUIC (UDP)
+  type: tuic
+  server: direct.heisenbergrv.com
+  port: 8443
+  uuid: ad8cbd3b-ab4b-4396-b83d-a5630002c3ad
+  password: 83d628ca639cd0c6f39f5970f5eb65e2
+  sni: direct.heisenbergrv.com
+  skip-cert-verify: false
+  congestion-controller: bbr
+  alpn:
+  - h3
+- name: Chicago-VLESS-Apple (TCP)
+  type: vless
+  server: 149.28.112.240
+  port: 8443
+  uuid: daeae5a0-a83d-452a-9e7a-b1e15fff944c
+  network: tcp
+  tls: true
+  udp: true
+  flow: xtls-rprx-vision
+  servername: www.apple.com
+  client-fingerprint: chrome
+  reality-opts:
+    public-key: CeY_56Ye6NWZxECpN0a29_w7_ULfU9LI6hsXGiQ2908
+    short-id: c06d6364
+- name: Chicago-CDN (保命节点)
+  type: vless
+  server: cdn.heisenbergrv.com
+  port: 2053
+  uuid: ad8cbd3b-ab4b-4396-b83d-a5630002c3ad
+  network: ws
+  tls: true
+  udp: true
+  sni: cdn.heisenbergrv.com
+  skip-cert-verify: false
+  ws-opts:
+    path: /cdn-vless
+    headers:
+      Host: cdn.heisenbergrv.com
+proxy-groups:
+- name: 🚀 Chicago 节点
+  type: select
+  proxies:
+  - Chicago-Hysteria2 (UDP)
+  - Chicago-TUIC (UDP)
+  - Chicago-VLESS-Apple (TCP)
+  - Chicago-CDN (保命节点)
+rules:
+- MATCH,🚀 Chicago 节点
